@@ -1,6 +1,12 @@
 import React from 'react'
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { useSetRecoilState } from 'recoil';
+import { checkState } from '../Store/Variables';
 function Demo() {
+  const setLogin=useSetRecoilState(checkState);
+
+
   return (
     <div
       className="bg-[url('/service-1.jpeg')] text-white"
@@ -30,17 +36,19 @@ function Demo() {
           </p>
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-4">
-              <i className="fa-sharp fa-solid fa-circle-check"></i>
+              <FontAwesomeIcon icon={faCircleCheck} />
               <p className="text-[18px] font-[400] leading-[27px]">
                 Country Citizenship
               </p>
             </div>
             <div className="flex items-center gap-4">
-              <i className="fa-sharp fa-solid fa-circle-check"></i>
+              <FontAwesomeIcon icon={faCircleCheck} />
+
               <p>Settling In Country</p>
             </div>
             <div className="flex items-center gap-4">
-              <i className="fa-sharp fa-solid fa-circle-check"></i>
+              <FontAwesomeIcon icon={faCircleCheck} />
+
               <p>Entering & Leaving From Country</p>
             </div>
           </div>
@@ -55,10 +63,10 @@ function Demo() {
                 top: navbarPosition,
                 behavior: "smooth", // Smooth scrolling animation
               });
-            //   setLogin({
-            //     isSignUpOpen: true,
-            //     isLoginOpen: false,
-            //   });
+              setLogin({
+                isSignUpOpen: true,
+                isLoginOpen: false,
+              });
             }}
           >
             <a href="#cta_form-03-690461" target="_self">

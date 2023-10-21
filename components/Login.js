@@ -1,18 +1,66 @@
-import React from 'react'
+import {useState} from 'react'
 import { RxCross1 } from "react-icons/rx";
+import { useSetRecoilState } from 'recoil';
+import { checkState } from '../Store/Variables';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import {auth} from "../Firebase/Firebase"
+import { useRouter } from 'next/router'
+
 function Login() {
+  const setLogin = useSetRecoilState(checkState);
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null);
+const navigate=useRouter();
+  async function signIn(event) {
+    event.preventDefault();
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      setLogin({
+        isLoginOpen: false,
+        isSignUpOpen: false
+      })
+      navigate.push("/projectsection")
+
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  async function google() {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider)
+        .then(async () => {
+          setLogin({
+            isLoginOpen: false,
+            isSignUpOpen: false
+          })
+          
+          navigate.push("/projectsection")
+        }).catch((err) => {
+          console.log("internal server error", err)
+        })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <div className=" flex items-center text-center text-white absolute lg:px-0 px-4 top-32 lg:left-[35%] z-10">
     <div className=" border-2 border-white bg-[#080E26] rounded-3xl flex flex-col relative">
       <div className="lg:px-14 px-4">
         <RxCross1
           className="text-[25px] text-end absolute right-5 top-4 cursor-pointer"
-        //   onClick={() => {
-        //     setLogin({
-        //       isLoginOpen: false,
-        //       isSignUpOpen: false,
-        //     });
-        //   }}
+          onClick={() => {
+            setLogin({
+              isLoginOpen: false,
+              isSignUpOpen: false,
+            });
+          }}
         />
         <div>
           <h1 className="text-[36px] font-[600] leading-[48px] text-center text-white pt-14 lg:pt-10">
@@ -24,7 +72,7 @@ function Login() {
         </div>
         <div
           className="border-2 border-gray-500 my-6 rounded-[20px] flex justify-center gap-4 items-center py-3"
-        //   onClick={google}
+          onClick={google}
         >
           <div>
             <svg
@@ -64,7 +112,7 @@ function Login() {
         <form
           action=""
           className="flex flex-col gap-7 text-gray-500 py-6"
-        //   onSubmit={signIn}
+          onSubmit={signIn}
         >
           <div className="flex flex-col gap-8">
             <input

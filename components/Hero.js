@@ -6,8 +6,13 @@ import { useState, useEffect, useRef } from "react";
 import Typewriter from 'typewriter-effect';
 import Login from './Login';
 import SignUp from './SignUp';
-
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {getSignUp, getLogin} from "../Store/Getters";
+import { checkState } from '../Store/Variables';
 function Hero() {
+  const isSignUpOpen=useRecoilValue(getSignUp);
+  const isLoginOpen=useRecoilValue(getLogin);
+  const setLogin = useSetRecoilState(checkState);
 
   return (
     <div
@@ -40,12 +45,13 @@ function Hero() {
           <div className="pb-8 pl-8 lg:pb-0 lg:pl-0">
             <button
               className="aai-gradient-outline-btn w-[90%] lg:w-[180px]"
-            // onClick={() => {
-            //   setLogin({
-            //     isLoginOpen: false,
-            //     isSignUpOpen: true,
-            //   });
-            // }}
+            onClick={() => {
+              setLogin({
+                isLoginOpen: false,
+                isSignUpOpen: true,
+            
+              });
+            }}
             >
               Get Started
             </button>
@@ -66,8 +72,8 @@ function Hero() {
         /> */}
         </div>
       </div>
-      <Login />
-      <SignUp />
+      {!isLoginOpen && isSignUpOpen ? <SignUp /> : null}
+      {isLoginOpen && !isSignUpOpen ? <Login /> : null}
     </div>
   )
 }

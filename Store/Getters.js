@@ -2,7 +2,7 @@ import { selector } from "recoil";
 import { checkState, connectedCredentials, userProfileDetails } from "./Variables";
 
 export const getLogin=selector({
-    key: "abc",
+    key: "c",
     get: ({get})=>{
         const check =get(checkState);
         return check.isLoginOpen;
@@ -10,7 +10,7 @@ export const getLogin=selector({
 });
 
 export const getSignUp=selector({
-    key: "efg",
+    key: "fg",
     get: ({get})=>{
         const check =get(checkState);
         return check.isSignUpOpen;
@@ -18,7 +18,7 @@ export const getSignUp=selector({
 });
 
 export const userName=selector({
-    key: "ijk",
+    key: "ik",
     get: ({get})=>{
         const check =get(connectedCredentials);
         return check.name;
@@ -26,7 +26,7 @@ export const userName=selector({
 });
 
 export const userToken=selector({
-    key: "lmn",
+    key: "ln",
     get: ({get})=>{
         const check =get(connectedCredentials);
         return check.token;
@@ -34,7 +34,7 @@ export const userToken=selector({
 });
 
 export const getUserProfileDetails=selector({
-    key: "opq",
+    key: "pq",
     get: ({get})=>{
         const check =get(userProfileDetails);
         return check.isProfile;

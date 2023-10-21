@@ -1,4 +1,6 @@
 // import BiLogoFacebook from "react-icons/fa";
+import { faFacebookF, faInstagram, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 const Footer = () => {
     return (
@@ -19,22 +21,22 @@ const Footer = () => {
               <div className="flex gap-5">
                 <div className="bg-gray-800 rounded-full w-10 h-10 flex justify-center items-center">
                   <a href="http://" target="_blank" rel="noopener noreferrer">
-                    <i className="fa-brands fa-facebook-f text-gray-400"></i>
+                    <FontAwesomeIcon icon={faFacebookF} className=" text-gray-400" />
                   </a>
                 </div>
                 <div className="bg-gray-800 rounded-full w-10 h-10 flex justify-center items-center">
                   <a href="http://" target="_blank" rel="noopener noreferrer">
-                    <i className="fa-brands fa-twitter text-gray-400"></i>
+                    <FontAwesomeIcon icon={faTwitter} className=" text-gray-400" />
                   </a>
                 </div>
                 <div className="bg-gray-800 rounded-full w-10 h-10 flex justify-center items-center">
                   <a href="http://" target="_blank" rel="noopener noreferrer">
-                    <i className="fa-brands fa-instagram text-gray-400"></i>
+                    <FontAwesomeIcon icon={faInstagram} className=" text-gray-400" />
                   </a>
                 </div>
                 <div className="bg-gray-800 rounded-full w-10 h-10 flex justify-center items-center">
                   <a href="http://" target="_blank" rel="noopener noreferrer">
-                    <i className="fa-brands fa-youtube text-gray-400"></i>
+                    <FontAwesomeIcon icon={faYoutube} className=" text-gray-400" />
                   </a>
                 </div>
               </div>

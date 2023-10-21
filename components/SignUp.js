@@ -1,18 +1,24 @@
-import React from 'react'
+import {useState} from 'react'
 import { RxCross1 } from "react-icons/rx";
+import { useSetRecoilState } from 'recoil';
+import { checkState } from '../Store/Variables';
 function SignUp() {
+  const [email, setEmail] = useState(null);
+  const [name, setName] = useState(null);
+  const [password, setPassword] = useState(null);
+  const setLogin = useSetRecoilState(checkState);
     return (
         <div className=" flex items-center text-center text-white absolute top-32 lg:left-[35%] z-10 px-4">
           <div className=" border-2 border-white bg-[#080E26] rounded-3xl flex flex-col relative px-6">
             <div className="lg:px-14">
               <RxCross1
                 className="text-[25px] text-end absolute right-5 top-4 cursor-pointer"
-                // onClick={() => {
-                //   setLogin({
-                //     isLoginOpen: false,
-                //     isSignUpOpen: false,
-                //   });
-                // }}
+                onClick={() => {
+                  setLogin({
+                    isLoginOpen: false,
+                    isSignUpOpen: false,
+                  });
+                }}
               />
               <div>
                 <h1 className="text-[30px] lg:text-[36px] font-[600] lg:leading-[48px] text-center text-white pt-14 lg:pt-10">
@@ -117,12 +123,12 @@ function SignUp() {
                 Already have an account?{" "}
                 <span
                   className="underline underline-offset-8 text-white text-[16px] cursor-pointer hover:text-orange-400"
-                //   onClick={() => {
-                //     setLogin({
-                //       isSignUpOpen: false,
-                //       isLoginOpen: true,
-                //     });
-                //   }}
+                  onClick={() => {
+                    setLogin({
+                      isSignUpOpen: false,
+                      isLoginOpen: true,
+                    });
+                  }}
                 >
                   Sign In
                 </span>

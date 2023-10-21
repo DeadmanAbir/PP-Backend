@@ -17,7 +17,7 @@ export const connectedCredentials=atom({
 });
 
 export const userProfileDetails=atom({
-    key: "c",
+    key: "x",
     default: {
         isProfile: false
     }
