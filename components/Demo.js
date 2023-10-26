@@ -21,7 +21,7 @@ function Demo() {
             src="https://www.youtube.com/embed/pqlVewAm-4Q?si=d61_FpMycJ7DXGbA"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
+            allowFullScreen
             className="w-full h-[210px] lg:w-[560px] lg:h-[315px]  rounded-lg"
           ></iframe>
         </div>

@@ -3,9 +3,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import SelectApp from '../components/SelectApp';
+import { auth } from '../Firebase/Firebase';
+import axios from 'axios';
 function projectsection() {
     const[isProjectOpen, setProject]=useState(false);
-
+    useEffect(() => {
+        async function fetchData() {
+          if(auth.currentUser){
+            try {
+                const response = await axios.get(`http://localhost:5000/general/allprojects/${auth.currentUser.displayName}`);
+            
+                console.log(response.data);
+              } catch (error) {
+                console.error('Error fetching data:', error);
+              }
+            }
+          }
+    
+        fetchData();
+      });
     return (
         <div className="bg-[url('/service-1.jpeg')] text-white">
           {isProjectOpen ? <SelectApp setProject={setProject} /> : null}
@@ -33,7 +49,9 @@ function projectsection() {
     
               </div>
             </div>
-           
+         <div className="bg-[#111629] w-[28rem] h-[20rem] flex justify-center items-center rounded-3xl border border-white">
+        <p>Add Project</p>
+      </div>
           </div>
         </div>
       );

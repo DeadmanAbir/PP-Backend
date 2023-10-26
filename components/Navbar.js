@@ -1,11 +1,22 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { checkState } from '../Store/Variables';
+import { userName } from '../Store/Getters';
+import { userProfileDetails } from '../Store/Variables';
+import { useRouter } from 'next/router';
+import { auth } from '../Firebase/Firebase';
+import { RxCross1 } from "react-icons/rx";
+import { signOut } from 'firebase/auth';
 function Navbar() {
   const [mobileNav, setMobileNav] = useState(false);
   const setLogin = useSetRecoilState(checkState);
+  const getUserName = useRecoilValue(userName);
+  const setUserProfile = useSetRecoilState(userProfileDetails);
+  const navigate=useRouter();
+  const [isToggleOn, setToggle] = useState(false);
+  const photoUrl = auth.currentUser && auth.currentUser.photoURL? auth.currentUser.photoURL: "/profile.png";
   return (
     <>
       <div className="bg-[#080E26] sticky top-0 z-20 px-4">
@@ -48,35 +59,118 @@ function Navbar() {
             <Link href="/contactus">Contact</Link>
           </div>
           <div className="lg:flex flex-row gap-5 lg:visible hidden">
-            <button
-              className="text-[20px] font-[300] underline underline-offset-8"
-              onClick={() => {
-                setLogin({
-                  isSignUpOpen: false,
-                  isLoginOpen: true,
-                });
-              }}
-            >
-              Login
-            </button>
+          {getUserName ? (
+              <div className="lg:flex lg:justify-center lg:items-center lg:visible hidden cursor-pointer">
+                <div className="bg-[orange] w-10 h-10 rounded-full" onClick={() => {
+                  setToggle(true)
+                }}>
+                  <Image
+                    src={photoUrl}
+                    height={200}
+                    width={200}
+                    className="rounded-full"
+                    alt=""
+                  />
+                </div>
+              </div>
+            ) : (
+              <>
+                {" "}
+                <button
+                  className="text-[20px] font-[300] underline underline-offset-8"
+                  onClick={() => {
+                    setLogin({
+                      isSignUpOpen: false,
+                      isLoginOpen: true,
+                    });
+                  }}
+                >
+                  Login
+                </button>
 
-            <button
-              className="aai-gradient-outline-btn"
-              onClick={() => {
-                setLogin({
-                  isLoginOpen: false,
-                  isSignUpOpen: true,
-                });
-              }}
-            >
-              Signup
-            </button>
+                <button
+                  className="aai-gradient-outline-btn"
+                  onClick={() => {
+                    setLogin({
+                      isLoginOpen: false,
+                      isSignUpOpen: true,
+                    });
+                  }}
+                >
+                  Signup
+                </button>
+              </>
+            )}
           </div>
         </div>
+        {isToggleOn ? (<Toogle setToggle={setToggle} />) : (null)}
+
       </div>
 
     </>
   )
 }
+
+function Toogle({ setToggle }) {
+  const photoUrl = auth.currentUser && auth.currentUser.photoURL? auth.currentUser.photoURL: "/profile.png";
+  const navigate = useRouter();
+  const setUserProfile = useSetRecoilState(userProfileDetails);
+  async function logout() {
+    try {
+      const response = await signOut(auth);
+      setUserProfile({
+        isProfile: false
+      })
+      return navigate.push("/");
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return (
+    <div className="absolute text-white bg-[#152637] border border-white rounded-2xl lg:mx-0 mx-3 px-10 py-10 top-28 lg:left-[46%]">
+      <div className="flex lg:flex-row flex-col gap-8">
+        <RxCross1 className="text-[25px] text-end absolute right-5 top-4 cursor-pointer" onClick={() => {
+          setToggle(false);
+        }} />
+        <div className="bg-[blue] w-10 h-10 rounded-full" >
+          <Image
+            src={photoUrl}
+            className="rounded-full"
+            height={200}
+            width={200}
+            alt=""
+          />
+        </div>
+        <div>
+          <div></div>
+          <div>
+            <div className="flex flex-col gap-4">
+              <h1 className="text-[28px] lg:text-[32px] font-[400] leading-[28px]">
+                {auth.currentUser.displayName}
+              </h1>
+              <p className="text-[18px] lg:text-[22px] font-[400] leading-[16px]">
+                {auth.currentUser.email}
+              </p>
+            </div>
+            <div className="my-3">
+              <div className="flex gap-3 items-center my-5">
+                <i className="fa-solid fa-gear"></i>
+                <Link href='/projectsection' onClick={() => setToggle(false)}><p>Dashboard</p></Link>
+              </div>
+              <div className="flex gap-3 items-center">
+                <i className="fa-solid fa-right-from-bracket"></i>
+                <p onClick={() => {
+                  logout();
+                  setToggle(false);
+                }}>Sign Out</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 export default Navbar

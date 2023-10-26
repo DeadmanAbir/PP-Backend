@@ -12,7 +12,7 @@ function Login() {
   const [password, setPassword] = useState(null);
 const navigate=useRouter();
   async function signIn(event) {
-    event.preventDefault();
+     event.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,

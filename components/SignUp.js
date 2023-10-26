@@ -2,11 +2,60 @@ import {useState} from 'react'
 import { RxCross1 } from "react-icons/rx";
 import { useSetRecoilState } from 'recoil';
 import { checkState } from '../Store/Variables';
+import { useRouter } from 'next/router';
+import { GoogleAuthProvider, signInWithPopup, signOut, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from '../Firebase/Firebase';
+import axios from 'axios';
 function SignUp() {
   const [email, setEmail] = useState(null);
   const [name, setName] = useState(null);
   const [password, setPassword] = useState(null);
   const setLogin = useSetRecoilState(checkState);
+  const navigate=useRouter();
+
+
+  async function google() {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider)
+        .then(async () => {
+          setLogin({
+            isLoginOpen: false,
+            isSignUpOpen: false
+          })
+          // const { uid, displayName, email } = await auth.currentUser;
+          // console.log(uid, displayName, email);
+         
+          navigate.push("/projectsection");
+        }).catch((err) => {
+          console.log("internal server error", err)
+        })
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function signUp(event) {
+    event.preventDefault();
+    try {
+      const data = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(name);
+      const update = await updateProfile(auth.currentUser, {
+        displayName: name
+      })
+      const response = await signOut(auth);
+      const create=await axios.post("http://localhost:5000/general/createName",{
+        name
+      })
+      setLogin({
+        isSignUpOpen: false,
+        isLoginOpen: true
+      })
+      // send a toast telling now login to move ahead
+    } catch (e) {
+      console.log(e);
+    }
+  }
     return (
         <div className=" flex items-center text-center text-white absolute top-32 lg:left-[35%] z-10 px-4">
           <div className=" border-2 border-white bg-[#080E26] rounded-3xl flex flex-col relative px-6">
@@ -30,7 +79,7 @@ function SignUp() {
               </div>
               <div
                 className="border border-gray-500 my-6 rounded-[20px] flex justify-center gap-4 items-center py-3"
-                // onClick={google}
+                onClick={google}
               >
                 <div>
                   <svg
@@ -70,7 +119,7 @@ function SignUp() {
               <form
                 action=""
                 className="flex flex-col gap-7 text-gray-500 py-6"
-                // onSubmit={signUp}
+                onSubmit={signUp}
               >
                 <div className="flex lg:flex-row flex-col gap-5">
                   <input
