@@ -2,16 +2,8 @@ const mongoose = require('mongoose');
 
 
 const userSchema = new mongoose.Schema({
-    name: String,
-    uid: String,
-    email: String,
-    twitter: [{
-        name: String,
-        refreshToken: String,
-        accessToken: String,
-        newsType: String,
-        schedule: String,
-      }],
+    user: String,
+ 
     linkedin: [{
         name: String,
         sub: String,
