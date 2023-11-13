@@ -25,7 +25,20 @@ router.get("/linkedin/callback", async (req, res) => {
     console.log( code)
     const accessToken = await getAccessToken(code);
     await saveCredentialsToMongo(accessToken, userId);
-    res.redirect(`http://localhost:3000/dashboard?method=Linkedin`);
+    res.redirect(`http://localhost:3000/dashboard?social=Linkedin`);
+  });
+
+  router.put('/linkedin/saveCredentials', async(req,res)=>{
+    const authorizationHeader = req.headers.authorization;
+   
+    const {name,newsType, schedule}=req.body;
+      const userId = authorizationHeader.split(' ')[1];
+      const filter={user: userId};
+      const updates={linkedin:[{name, newsType, schedule}]};
+     const update=await User.findOneAndUpdate(filter,updates);
+     res.sendStatus(200);
+
+
   });
 
 //all router. calls
