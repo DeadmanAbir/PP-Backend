@@ -40,15 +40,21 @@ const saveCredentialsToMongo = async (accessToken, userId) => {
       },
     });
 
-    // Handle the response here
-    console.log(response.data);
     const { sub, name, email, picture } = response.data;
-    // const { error } = await superbase
-    //   .from("linkedin")
-    //   .insert({ uid: uid, linkedinsub: sub, linkedinaccesstoken: accessToken });
-    const filter={user: userId};
-    const updates={linkedin:[{sub,  accessToken}]};
-   const update=await User.findOneAndUpdate(filter,updates);
+  
+
+   const user= await User.findOne({ user: userId});
+   const newArray=[{sub, accessToken, name: ""}];
+  console.log("userArray", user.linkedin)
+
+  for(let i =0; i<user.linkedin.length; i++) {
+    newArray.push(user.linkedin[i]);
+  }
+  console.log("newArray", newArray);
+
+   const filter={user: userId};
+    const updates={linkedin:newArray};
+    const update=await User.findOneAndUpdate(filter,updates);
     console.log( "saving to linkedin db");
   } catch (error) {
     // Handle errors, including the one you mentioned

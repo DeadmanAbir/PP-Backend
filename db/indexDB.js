@@ -13,9 +13,17 @@ const userSchema = new mongoose.Schema({
       }]
   });
 
-  const User = mongoose.model('User', userSchema);
+  const newsSchema = new mongoose.Schema({
+    fundingNews: String,
+    techNews: String,
+    startupNews: String,
+    
+  });
 
+  const User = mongoose.model('User', userSchema);
+const News=mongoose.model("News", newsSchema);
   module.exports={
-    User
+    User,
+    News
   }
   

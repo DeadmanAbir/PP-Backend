@@ -3,7 +3,6 @@ const express = require("express");
 const linkedinRouter = require("./routes/linkedin");
 const twitterRouter = require("./routes/twitter");
 const generalRouter = require("./routes/general");
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -12,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); // Middleware to parse cookies
 
+app.use("", linkedinRouter);
 
 mongoose.connect("mongodb+srv://sanjayduttyoyohoney:G3OQVIVmT92zRM1H@cluster0.jyox4xj.mongodb.net/Outerbase", { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -32,9 +32,8 @@ const checkUserIdMiddleware = (req, res, next) => {
     next();
   };
 
-// app.use(checkUserIdMiddleware);
+app.use(checkUserIdMiddleware);
 app.use("/general", generalRouter);
-app.use("", linkedinRouter);
 app.use("", twitterRouter);
 app.listen(5000, () => {
   console.log("listening on 5000");
