@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { User } = require("../db/indexDB.js");
-const { getAuthorizationUrl, saveCredentialsToMongo, getAccessToken } = require("../controllers/linkedinController.js");
+const { User, GPTResponse } = require("../db/indexDB.js");
+const { getAuthorizationUrl, saveCredentialsToMongo, getAccessToken , linkedinPost} = require("../controllers/linkedinController.js");
+const { getNews } = require("../controllers/postGenerator.js");
+const { sendMail } = require("../controllers/nodeMailer.js");
 
 router.get("/linkedin/authorize", (req, res) => {
   const userId = req.query.userId;
@@ -69,6 +71,44 @@ router.delete("/linkedin/deleteProject", async (req, res) => {
   const updates = { linkedin: projectArray };
   const update = await User.findOneAndUpdate(filter, updates);
   res.sendStatus(200);
+})
+
+
+router.post("/linkedin/instantPost", async (req, res) =>{
+  const authorizationHeader = req.headers.authorization;
+  const userId = authorizationHeader.split(' ')[1];
+  const {name, type}=req.body;
+const response=await GPTResponse.find({});
+const postContent = (type === "Technology") ? response[0].technologyNewsReponse:
+                  (type === "Funding") ? response[0].fundingNewsReponse:
+                  (type === "Startups") ? response[0].   startupNewsReponse: 
+                  null; 
+                  const user= await User.findOne({user: userId});
+                  
+                  const userArray=user.linkedin;
+                  let to;
+                  for(let i=0; i<userArray.length; i++) {
+                    if(userArray[i].name==name){
+                      to=userArray[i].email;
+                    }
+                  }
+                 
+
+  
+
+try{
+  const post = await linkedinPost(postContent, userId, name, userArray);
+const mail=await sendMail(to);
+  res.sendStatus(200);
+
+}catch(e){
+  console.log(e.message);
+  res.sendStatus(500);
+}
+
+
+
+
 })
 
 module.exports = router;
