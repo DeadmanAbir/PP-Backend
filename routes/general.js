@@ -1,34 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require('mongoose');
-const TwitterApi = require("twitter-api-v2").default;
 const {User}=require("../db/indexDB.js");
 
 
-router.post("/createName", async (req, res)=>{
-    const {name} = req.body;
-    const objs={name};
-    const newUser= new User(objs);
-    newUser.save();
-    res.json({message: "User created successfully"});
+router.post("/checkForUser", async (req, res)=>{
+  const authorizationHeader = req.headers.authorization;
+
+    const userId = authorizationHeader.split(' ')[1];
+  
+    const user=await User.findOne({ user: userId});
+    if(user){
+      return res.sendStatus(200);
+
+    }else{
+      const objs={user: userId};
+      const newUser= new User(objs);
+      newUser.save();
+      return res.json({message: "User created successfully"});
+    }
+    
 })
 
-router.get('/allprojects/:userName', async (req, res) => {
-    const userName = req.params.userName;
-    const user = await User.findOne({ name: userName });
+router.get('/allprojects', async (req, res) => {
+  const authorizationHeader = req.headers.authorization;
+
+  const userId = authorizationHeader.split(' ')[1];
+
+  const user = await User.findOne({ user: userId });
   
     if (!user) {
       return res.json([]);
     }
   
-    const project1 = user.twitter || []; 
-    const project2 = user.linkedin || []; 
+    const project= user.linkedin || []; 
   
-    const projects = [...project1, ...project2]; 
-  
-    res.json( projects );
+
+    res.json( project);
   });
   
 
-//all router. calls
 module.exports =router;
