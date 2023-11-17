@@ -4,7 +4,7 @@ const linkedinRouter = require("./routes/linkedin");
 const generalRouter = require("./routes/general");
 const cronJobs=require("./routes/cronJobs");
 const cookieParser = require('cookie-parser');
-
+const dotenv = require("dotenv").config();
 const app = express();
 const cors = require('cors');
 app.use(cors());
@@ -14,22 +14,20 @@ app.use(cookieParser()); // Middleware to parse cookies
 app.use("", linkedinRouter);
 app.use("/cronJobs", cronJobs );
 
-mongoose.connect("mongodb+srv://sanjayduttyoyohoney:G3OQVIVmT92zRM1H@cluster0.jyox4xj.mongodb.net/Outerbase", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const checkUserIdMiddleware = (req, res, next) => {
     const authorizationHeader = req.headers.authorization;
   
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
-      // If the Bearer token is not present, you can handle unauthorized access
+      
       return res.status(401).json({ error: 'Unauthorized access. Bearer token is missing.' });
     }
   
     const token = authorizationHeader.split(' ')[1];
   
-    // Attach the userId (token) to the request object for use in subsequent route handlers
     req.userId = token;
   console.log("approved", token)
-    // Continue to the next middleware or route handler
     next();
   };
 
