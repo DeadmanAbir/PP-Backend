@@ -1,5 +1,4 @@
 const dotenv = require("dotenv").config();
-const fs = require("fs");
 const OpenAI = require("openai");
 const {News}=require("../db/indexDB");
 const openai = new OpenAI({
