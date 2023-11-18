@@ -1,16 +1,17 @@
 const axios = require("axios");
 const {User}=require("../db/indexDB")
 
+const dotenv = require("dotenv").config();
 
 const getAuthorizationUrl = () => {
-  const redirectUri = encodeURI(`http://localhost:5000/linkedin/callback`);
+  const redirectUri = encodeURI(`${process.env.BACKEND_URL}/linkedin/callback`);
 
   return `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=77fc7ioh2s1s0c&redirect_uri=${redirectUri}&state=foobar&scope=profile%20email%20w_member_social%20openid`;
 };
 
 
 const getAccessToken = async (code) => {
-  const redirectUri = encodeURI(`http://localhost:5000/linkedin/callback`);
+  const redirectUri = encodeURI(`${BACKEND_URL}/linkedin/callback`);
   const response = await axios.post(
     "https://www.linkedin.com/oauth/v2/accessToken",
     null,
@@ -18,8 +19,8 @@ const getAccessToken = async (code) => {
       params: {
         grant_type: "authorization_code",
         code,
-        client_id: "77fc7ioh2s1s0c",
-        client_secret: "OHgiHVTZx59sVNRW",
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
         redirect_uri: redirectUri,
       },
       headers: {
