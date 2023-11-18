@@ -25,8 +25,8 @@ Stay tuned for more updates from PostPilot, and if you have any feedback or sugg
     //   html: "<b>Hello world?</b>", // html body
   });
   //   res.json(info);
-  console.log("Message sent: %s", info.messageId);
-  console.log(info);
+  console.log("Message sent: %s");
+
 }
 
 module.exports = { sendMail };
