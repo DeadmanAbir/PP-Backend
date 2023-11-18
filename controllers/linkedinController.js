@@ -11,7 +11,7 @@ const getAuthorizationUrl = () => {
 
 
 const getAccessToken = async (code) => {
-  const redirectUri = encodeURI(`${BACKEND_URL}/linkedin/callback`);
+  const redirectUri = encodeURI(`${process.env.BACKEND_URL}/linkedin/callback`);
   const response = await axios.post(
     "https://www.linkedin.com/oauth/v2/accessToken",
     null,
