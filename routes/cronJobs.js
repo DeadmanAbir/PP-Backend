@@ -43,4 +43,8 @@ router.post("/GPTResponseSave/:type", async (req, res) => {
     }
 })
 
+router.get("/active", (req, res) => {
+    res.sendStatus(200);
+})
+
 module.exports =router;
