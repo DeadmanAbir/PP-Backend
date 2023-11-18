@@ -15,7 +15,7 @@ app.use("", linkedinRouter);
 app.use("/cronJobs", cronJobs );
 
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
-
+const PORT=process.env.PORT  || 5000;
 const checkUserIdMiddleware = (req, res, next) => {
     const authorizationHeader = req.headers.authorization;
   
@@ -33,6 +33,6 @@ const checkUserIdMiddleware = (req, res, next) => {
 
 app.use(checkUserIdMiddleware);
 app.use("/general", generalRouter);
-app.listen(5000, () => {
-  console.log("listening on 5000");
+app.listen(PORT, () => {
+  console.log(`listening on ${PORT}`);
 });
