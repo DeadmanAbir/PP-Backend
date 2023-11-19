@@ -7,17 +7,20 @@ router.post("/checkForUser", async (req, res)=>{
   const authorizationHeader = req.headers.authorization;
 
     const userId = authorizationHeader.split(' ')[1];
-  
+  try{
+    
     const user=await User.findOne({ user: userId});
-    if(user){
-      return res.sendStatus(200);
-
-    }else{
+    if(!user){
       const objs={user: userId};
       const newUser= new User(objs);
       newUser.save();
-      return res.json({message: "User created successfully"});
     }
+    res.status(200).send({message: "User created successfully"})
+  }catch(e){
+    console.log(e.message);
+    res.status(500).send({message: e.message});
+  }
+
     
 })
 

@@ -39,7 +39,7 @@ router.post("/GPTResponseSave/:type", async (req, res) => {
         res.sendStatus(200);
     }catch(e){
         console.log(e.message);
-        res.send({message: e.message})
+        res.status(500).send(e.message);
     }
 })
 
