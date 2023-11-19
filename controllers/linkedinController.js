@@ -57,7 +57,7 @@ const saveCredentialsToMongo = async (accessToken, userId) => {
     console.error("Error:", error.response?.data || error.message);
   }
 };
-const linkedinPost = async (postContent, userId, name, userArray) => {
+const linkedinPost = async (postContent, name, userArray, res) => {
   try {
     
     let accessToken; 
@@ -97,10 +97,12 @@ const linkedinPost = async (postContent, userId, name, userArray) => {
       return response.data;
     } catch (err) {
       console.log(err);
+      res.status(500).send(err.message)
     
     }
   } catch (err) {
-    console.log(err);
+      res.status(500).send(err.message)
+      console.log(err);
   }
 };
 module.exports = {

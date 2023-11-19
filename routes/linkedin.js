@@ -98,7 +98,7 @@ router.post("/linkedin/instantPost", async (req, res) => {
 
 
   try {
-    const post = await linkedinPost(postContent, userId, name, userArray);
+    const post = await linkedinPost(postContent, name, userArray, res);
     const mail = await sendMail(to);
     res.sendStatus(200);
 
