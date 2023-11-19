@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser');
 const dotenv = require("dotenv").config();
 const app = express();
 const cors = require('cors');
+const cron = require('node-cron');
+const { updateGPTResponse } = require('./CronScripts/cronScript');
+
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser()); // Middleware to parse cookies
@@ -33,6 +36,15 @@ const checkUserIdMiddleware = (req, res, next) => {
 
 app.use(checkUserIdMiddleware);
 app.use("/general", generalRouter);
+
+
+
+cron.schedule('15 10 * * *', () => {
+  console.log('running the cron job');
+  const job=updateGPTResponse();
+});
+
+
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });
