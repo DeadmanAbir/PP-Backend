@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv").config();
 
-const {News, GPTResponse}=require("../db/indexDB");
+const {News, GPTResponse, User}=require("../db/indexDB");
 const { getNews } = require("../controllers/postGenerator");
 
 router.post("/scrapeAndSave", async(req,res)=>{
@@ -41,6 +41,33 @@ router.post("/GPTResponseSave/:type", async (req, res) => {
         console.log(e.message);
         res.status(500).send(e.message);
     }
+})
+
+router.post("/DailyPosting", async(req, res) => {
+    const users=await User.find({});
+    const length=users.length;
+    for(let i=0; i<length; i++) {
+        // console.log(users[i]);
+        const userId=users[i].user;
+        const linkedlnArray=users[i].linkedin;
+        for(let j=0; j<linkedlnArray.length; j++) {
+
+            //posting fetch should be done here
+            const response = await fetch("https://pp-backend-v6b8.onrender.com/linkedin/instantPost", {
+                method: 'POST', // or 'GET', 'PUT', etc.
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${userId}`,
+                },
+                body: JSON.stringify({
+                  name: linkedlnArray[j].name,
+                  type: linkedlnArray[j].newsType,
+                }),
+              });
+            // console.log(userId, linkedlnArray[j]);
+        }
+    }
+     res.send(length.toString());
 })
 
 router.get("/active", (req, res) => {

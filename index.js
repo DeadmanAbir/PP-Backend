@@ -40,7 +40,7 @@ app.use("/general", generalRouter);
 
 
 cron.schedule('15 10 * * *', () => {
-  console.log('running the cron job');
+  console.log('running the cron job for saving GPT Response');
   const job=updateGPTResponse();
 });
 
