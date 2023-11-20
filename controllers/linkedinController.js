@@ -105,9 +105,57 @@ const linkedinPost = async (postContent, name, userArray, res) => {
       console.log(err);
   }
 };
+
+
+const dailyLinkedinPost = async (postContent, accessToken, sub) => {
+  try {
+    
+    
+    let profileId =sub;
+    
+   
+    try {
+      const response = await axios.post(
+        "https://api.linkedin.com/v2/ugcPosts",
+        {
+          author: `urn:li:person:${profileId}`,
+          lifecycleState: "PUBLISHED",
+          specificContent: {
+            "com.linkedin.ugc.ShareContent": {
+              shareCommentary: {
+                text: postContent,
+              },
+              shareMediaCategory: "NONE",
+            },
+          },
+          visibility: {
+            "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC",
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (err) {
+      console.log(err);
+      res.status(500).send(err.message)
+    
+    }
+  } catch (err) {
+      res.status(500).send(err.message)
+      console.log(err);
+  }
+};
+
+
 module.exports = {
   getAuthorizationUrl,
   getAccessToken,
   saveCredentialsToMongo,
    linkedinPost,
+   dailyLinkedinPost
 };

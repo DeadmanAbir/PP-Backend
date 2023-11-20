@@ -2,88 +2,75 @@ const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv").config();
 
-const {News, GPTResponse, User}=require("../db/indexDB");
+const { News, GPTResponse, User } = require("../db/indexDB");
 const { getNews } = require("../controllers/postGenerator");
 const { updateGPTResponse } = require("../CronScripts/cronScript");
-
-router.post("/scrapeAndSave", async(req,res)=>{
-    const response = await fetch(process.env.URL);
-
-    console.log(response);
-    const objs={
-        techNews: response
-    }
-    const news=new News(objs);
-    news.save();
-    res.sendStatus(200);
+const { dailyLinkedinPost } = require("../controllers/linkedinController");
 
 
-})
 
 router.post("/GPTResponseSave/:type", async (req, res) => {
-    const type=req.params.type;
-    try{
+    const type = req.params.type;
+    try {
 
-        const response=await getNews(type);
+        const response = await getNews(type);
         console.log(response);
-        if(type=="technology"){
-            await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, {technologyNewsReponse: response})
+        if (type == "technology") {
+            await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, { technologyNewsReponse: response })
 
-        }else if(type=="funding"){
-        await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, {fundingNewsReponse: response})
+        } else if (type == "funding") {
+            await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, { fundingNewsReponse: response })
 
-        }else if(type=="startups"){
-        await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, { startupNewsReponse: response})
+        } else if (type == "startups") {
+            await GPTResponse.findByIdAndUpdate(process.env.RESPONSE_ID, { startupNewsReponse: response })
         }
 
-     
+
         res.sendStatus(200);
-    }catch(e){
+    } catch (e) {
         console.log(e.message);
         res.status(500).send(e.message);
     }
 })
 
-router.post("/DailyPosting", async(req, res) => {
-    const users=await User.find({});
-    const length=users.length;
-    for(let i=0; i<length; i++) {
-        // console.log(users[i]);
-        const userId=users[i].user;
-        const linkedlnArray=users[i].linkedin;
-        for(let j=0; j<linkedlnArray.length; j++) {
 
-            //posting fetch should be done here
-            const response = await fetch("https://pp-backend-v6b8.onrender.com/linkedin/instantPost", {
-                method: 'POST', // or 'GET', 'PUT', etc.
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${userId}`,
-                },
-                body: JSON.stringify({
-                  name: linkedlnArray[j].name,
-                  type: linkedlnArray[j].newsType,
-                }),
-              });
-            // console.log(userId, linkedlnArray[j]);
+router.post("/DailyPosting", async (req, res) => {
+    const users = await User.find({});
+    const length = users.length;
+    for (let i = 0; i < length; i++) {
+
+        const userId = users[i].user;
+        const linkedlnArray = users[i].linkedin;
+        console.log("user id", userId);
+
+        for (let j = 0; j < linkedlnArray.length; j++) {
+            const type = linkedlnArray[j].newsType;
+            const accessToken = linkedlnArray[j].accessToken;
+            const sub = linkedlnArray[j].sub;
+            const response = await GPTResponse.find({});
+            const postContent = (type === "Technology") ? response[0].technologyNewsReponse :
+                (type === "Funding") ? response[0].fundingNewsReponse :
+                    (type === "Startups") ? response[0].startupNewsReponse :
+                        null;
+
+            try {
+
+                await dailyLinkedinPost(postContent, accessToken, sub);
+            } catch (e) {
+                console.error(e.message);
+            }
+
+
         }
     }
-     res.send(length.toString());
+    res.send(length.toString());
 })
 
-router.post("/GPT", function(req, res) {
-    try{
-        updateGPTResponse();
-        res.sendStatus(200);
-    }catch(e){
-        console.log(e.message);
-        res.status(500).send(e.message);
-    }
-})
+
 
 
 router.get("/active", (req, res) => {
     res.sendStatus(200);
 })
 
-module.exports =router;
+module.exports = router;

@@ -49,6 +49,19 @@ cron.schedule('0 5 * * *', async() => {
 });
 
 
+cron.schedule('15 5 * * *', async() => {
+  console.log('Running every day at 10:45 AM IST (5:15 AM UTC) for posting');
+  const options = {
+    method: 'POST',
+    };
+  try{
+    const job= await fetch(process.env.DAILY_POSTING_URL, options);
+  }catch(e){
+    console.log(e.message);
+  }
+});
+
+
 
 
 app.listen(PORT, () => {
