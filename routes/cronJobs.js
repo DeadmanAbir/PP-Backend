@@ -4,6 +4,7 @@ const dotenv = require("dotenv").config();
 
 const {News, GPTResponse, User}=require("../db/indexDB");
 const { getNews } = require("../controllers/postGenerator");
+const { updateGPTResponse } = require("../CronScripts/cronScript");
 
 router.post("/scrapeAndSave", async(req,res)=>{
     const response = await fetch(process.env.URL);
@@ -69,6 +70,17 @@ router.post("/DailyPosting", async(req, res) => {
     }
      res.send(length.toString());
 })
+
+router.post("/GPT", function(req, res) {
+    try{
+        updateGPTResponse();
+        res.sendStatus(200);
+    }catch(e){
+        console.log(e.message);
+        res.status(500).send(e.message);
+    }
+})
+
 
 router.get("/active", (req, res) => {
     res.sendStatus(200);
