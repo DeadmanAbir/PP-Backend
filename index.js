@@ -44,6 +44,10 @@ cron.schedule('15 10 * * *', () => {
   const job=updateGPTResponse();
 });
 
+cron.schedule('*/2 * * * *', () => {
+  console.log("testing cron on server");
+});
+
 
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
