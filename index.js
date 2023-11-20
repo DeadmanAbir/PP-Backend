@@ -39,17 +39,13 @@ app.use("/general", generalRouter);
 
 
 
-cron.schedule('26 12 * * *', async() => {
-  console.log('running the cron job for saving GPT Response');
+cron.schedule('0 5 * * *', async() => {
+  console.log("Running every day at 10:30 AM IST (5:00 AM UTC) for saving GPTResponse");
   try{
     const job= await updateGPTResponse();
   }catch(e){
     console.log(e.message);
   }
-});
-
-cron.schedule('0 11 * * *', () => {
-  console.log('Running every day at 4:30 PM IST (11:00 AM UTC)');
 });
 
 
