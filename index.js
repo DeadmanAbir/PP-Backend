@@ -48,7 +48,7 @@ cron.schedule('26 12 * * *', async() => {
   }
 });
 
-cron.schedule('40 10 * * *', () => {
+cron.schedule('45 10 * * *', () => {
   console.log('Running every day at 3:40 PM IST');
 });
 
