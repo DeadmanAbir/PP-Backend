@@ -39,14 +39,16 @@ app.use("/general", generalRouter);
 
 
 
-cron.schedule('15 10 * * *', () => {
+cron.schedule('5 12 * * *', () => {
   console.log('running the cron job for saving GPT Response');
-  const job=updateGPTResponse();
+  try{
+    const job=updateGPTResponse();
+  }catch(e){
+    console.log(e.message);
+  }
 });
 
-cron.schedule('*/2 * * * *', () => {
-  console.log("testing cron on server");
-});
+
 
 
 app.listen(PORT, () => {
