@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const dotenv = require("dotenv").config();
-
+const {sendMail}=require("../controllers/nodeMailer");
 const { News, GPTResponse, User } = require("../db/indexDB");
 const { getNews } = require("../controllers/postGenerator");
 const { updateGPTResponse } = require("../CronScripts/cronScript");
@@ -47,6 +47,7 @@ router.post("/DailyPosting", async (req, res) => {
             const type = linkedlnArray[j].newsType;
             const accessToken = linkedlnArray[j].accessToken;
             const sub = linkedlnArray[j].sub;
+            const to= linkedlnArray[j].email;
             const response = await GPTResponse.find({});
             const postContent = (type === "Technology") ? response[0].technologyNewsReponse :
                 (type === "Funding") ? response[0].fundingNewsReponse :
@@ -56,6 +57,8 @@ router.post("/DailyPosting", async (req, res) => {
             try {
 
                 await dailyLinkedinPost(postContent, accessToken, sub);
+                await sendMail(to);
+
             } catch (e) {
                 console.error(e.message);
             }
@@ -63,7 +66,8 @@ router.post("/DailyPosting", async (req, res) => {
 
         }
     }
-    res.send(length.toString());
+    res.sendStatus(200);
+
 })
 
 
