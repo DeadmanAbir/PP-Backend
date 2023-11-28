@@ -16,7 +16,8 @@ const openai = new OpenAI({
         newsArray.splice(5);
       } 
     //   console.log("newsarray", newsArray);
-      let prompt = `Generate a LinkedIn post using the given title, description, and link of a news article. The post should be concise and not exceed 2000 characters. Avoid including any pretext or context in your response. Provide the news title, a brief description, and the link to the article. The news is:\n\n`;
+      // let prompt = `Generate a LinkedIn post using the given title, description, and link of a news article. The post should be concise and not exceed 2000 characters. Avoid including any pretext or context in your response. Provide the news title, a brief description, and the link to the article. The news is:\n\n`;
+      let prompt = `Generate a concise and visually appealing LinkedIn post using the given array of news objects. Each news item includes a title, description, and link. Ensure that the post does not exceed 2000 characters.  Avoid including any pretext or context in your response. Include the news link after each corresponding news item for easy access. The news is:\n\n `
       newsArray.forEach((i) => {
         prompt += `Title: ${i.title}\n`;
         prompt+= `Link: ${i.link}\n`;
