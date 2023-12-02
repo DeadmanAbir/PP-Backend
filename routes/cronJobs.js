@@ -56,8 +56,8 @@ router.post("/DailyPosting", async (req, res) => {
 
 const axios = require("axios");
 
-router.get("/test/:url", async (req, res) => {
-    const url = req.params.url;
+router.get("/test", async (req, res) => {
+     const url = req.query.url;
     const username = "brd-customer-hl_c0544c69-zone-unblocker";
     const password = "31tltx8tp511";
     const port = 22225;
